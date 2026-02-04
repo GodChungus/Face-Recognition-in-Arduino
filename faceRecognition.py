@@ -10,11 +10,14 @@ from contextlib import redirect_stdout, redirect_stderr
 # Settings
 # ========================================================
 db_path = "faces"
-authorizedPeople = ["Prakrit", "Ira"]
+authorizedPeople = ["Prakrit", "Ira", "Aabiskar", "Aaravi", "Angshoo", "Anit", "Areena", "Arogya",
+                    "Asal", "Bishal", "Brazen", "Celsa", "Darpan", "Deepson", "Dilkumar", "Jasmine",
+                    " Joyesh", "Kaben", "Megsha", "Prakash", "Rajan", "Sarthak", "Sujan", "Suman",
+                    "Surasa", "Suryansh", "Suyog", "Swastika", "Upashak", "Yulene", "Kripal", "Modika"]
 
 detectorModel = "Facenet"
 detector = "mtcnn"
-distThreshold = 0.9
+distThreshold = 0.4
 
 serialPort = "COM7"
 baudRate = 9600
@@ -73,7 +76,6 @@ while True:
                 distance = top["distance"]
                 identity_path = top["identity"]
                 detected_name = os.path.basename(os.path.dirname(identity_path))
-
                 if distance < distThreshold and detected_name in authorizedPeople:
                     name = detected_name
                     authorized = True
