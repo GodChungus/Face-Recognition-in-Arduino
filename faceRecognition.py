@@ -10,20 +10,23 @@ from contextlib import redirect_stdout, redirect_stderr
 # Settings
 # ========================================================
 db_path = "faces"
-authorizedPeople = ["Prakrit", "Ira", "Aabiskar", "Aaravi", "Angshoo", "Anit", "Areena", "Arogya",
-                    "Asal", "Bishal", "Brazen", "Celsa", "Darpan", "Deepson", "Dilkumar", "Jasmine",
-                    " Joyesh", "Kaben", "Megsha", "Prakash", "Rajan", "Sarthak", "Sujan", "Suman",
-                    "Surasa", "Suryansh", "Suyog", "Swastika", "Upashak", "Yulene", "Kripal", "Modika"]
+
+authorizedPeople = [
+    "Prakrit", "Ira", "Aaravi", "Aarush", "Anit", "Areena", "Asal", "Bishal", "Brazen", "Celsa", "Deepson",
+    "Jasmine", "Kaben", "Megsha", "Modika", "Rajan", "Sujan", "Sukriti", "Surasa", "Suyog", "Upashak", "Yulene"
+]
 
 detectorModel = "Facenet"
-detector = "mtcnn"
-distThreshold = 0.4
+detector = "opencv"
+distThreshold = 0.45   # stricter
 
 serialPort = "COM7"
 baudRate = 9600
 
-checkInterval = 0.5 # Seconds between recognition
-resizeScale = 0.5
+checkInterval = 1.0 # Seconds between recognition
+resizeScale = 0.4
+
+requiredTime = 2.5   # seconds needed to confirm identity
 
 arduino = serial.Serial(serialPort, baudRate, timeout=1)
 time.sleep(2)
@@ -41,6 +44,9 @@ last_sent = None
 
 name = "Unknown"
 authorized = False
+
+current_candidate = None
+candidate_start_time = None
 
 while True:
     ret, frame = cap.read()
@@ -76,19 +82,37 @@ while True:
                 distance = top["distance"]
                 identity_path = top["identity"]
                 detected_name = os.path.basename(os.path.dirname(identity_path))
+
                 if distance < distThreshold and detected_name in authorizedPeople:
-                    name = detected_name
-                    authorized = True
+
+                    if detected_name == current_candidate:
+                        elapsed = time.time() - candidate_start_time
+                        if elapsed >= requiredTime:
+                            name = detected_name
+                            authorized = True
+                        else:
+                            name = f"Verifying {detected_name}..."
+                            authorized = False
+                    else:
+                        current_candidate = detected_name
+                        candidate_start_time = time.time()
+                        name = f"Verifying {detected_name}..."
+                        authorized = False
                 else:
+                    current_candidate = None
+                    candidate_start_time = None
                     name = "Unknown"
                     authorized = False
             else:
                 # No face detected
+                current_candidate = None
+                candidate_start_time = None
                 name = "Unknown"
                 authorized = False
 
-
         except Exception:
+            current_candidate = None
+            candidate_start_time = None
             name = "Unknown"
             authorized = False
 
@@ -103,7 +127,13 @@ while True:
     # ========================================================
     # Adding text to the screen
     # ========================================================
-    color = (0, 255, 0) if authorized else (0, 0, 255)
+    if authorized:
+        color = (0, 255, 0)
+    elif "Verifying" in name:
+        color = (0, 255, 255)
+    else:
+        color = (0, 0, 255)
+
     cv2.putText(
         frame,
         name,
