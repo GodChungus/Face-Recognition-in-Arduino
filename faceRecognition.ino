@@ -12,10 +12,6 @@ void setup() {
   pinMode(greenLED, OUTPUT);
   pinMode(redLED, OUTPUT);
 
-  // Make sure the LEDs are off when starting.
-  digitalWrite(greenLED, LOW);
-  digitalWrite(redLED, LOW);
-
   Serial.begin(9600); // Baud rate(number of signals sent per second)
 
   theServo.attach(servoPin);
@@ -29,12 +25,12 @@ void loop() {
     if (incoming == '1') { // if face is recognized
       digitalWrite(greenLED, HIGH);
       digitalWrite(redLED, LOW);
-      theServo.write(90); // set servo motor to a rotation of 90 degrees
+      theServo.write(180); // set servo motor to a rotation of 180 degrees
     }
     else if (incoming == '0') {
       digitalWrite(greenLED, LOW);
       digitalWrite(redLED, HIGH);
-      theServo.write(0); // set servo motor to a rotation of 0 degrees
+      theServo.write(80); // set servo motor to a rotation of 80 degrees
     }
   }
 }
