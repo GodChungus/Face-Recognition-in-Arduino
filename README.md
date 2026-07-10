@@ -1,19 +1,61 @@
 <div align="center">
-  <h1><b>👱🏻Facial Recognition using Arduino👱🏻</b></h1>
 
-  <h3><b>How does it work?</b></h3>
-  <p>
-    The Python code has three main libraries: DeepFace, Serial, and CV2. CV2 is just OpenCV, which is a library that allows for opening of a camera window and some other commands relating to it in Python. 
-    DeepFace is a facial recognition library that allows for easy facial recognition, and Serial is just a library that allows for communication between Python and the hardware components(in this case, the Arduino).
-  </p>
-  <p>
-    The camera window is opened, which then recognizes your face. For a few seconds, it verifies to prevent any false recognitions. Once your face has been identified, it sends a signal '1' to the Arduino indicating
-    that your face has been recognized, along with displaying your name in green text on the screen. In the case your face has not been recognized, a red text spelling "Unknown" appears on the screen, and the script
-    sends a signal '0' to the Arduino indicating your face has not been recognized.
-  </p>
-  <p>
-    If the signal received by the Arduino is '1', a green LED turns on, and a servo motor is rotated 90 degrees. The servo motor has an accessory attached to it that basically acts like a door lock, which when
-    rotated by 90 degrees would unlock the door. If the signal received by the Arduino is '0', a red LED turns on, and the servo motor either does not move or goes back to zero degrees, depending on it's position,
-    thus locking the door.
-  </p>
+# 👱🏻 Facial Recognition using Arduino
+
+This project combines **Python**, **OpenCV**, **DeepFace**, and **Arduino**
+to create a facial recognition door locking system. Once a face is
+successfully verified, the Arduino unlocks the door by rotating a
+servo motor. If the face is not recognized, the door remains locked.
+
+This project uses **Python**, **OpenCV**, **DeepFace**, and **Arduino**
+to create a facial recognition door locking/unlocking system. Once a
+face is verified, the Arduino unlocks the door by rotating a servo motor
+connected physically to the door to unlock it. If the face is not verified,
+the door remains locked.
+
+</div>
+
+---
+
+## 🐍 How It Works(Python)
+
+* 📷 **OpenCV** opens the webcam and continuously captures video frames.
+* 🧠 **DeepFace** analyzes each frame and scans the database to find matching faces.
+* 🔌 **Serial** allows for communication between Python and the Arduino.
+* ✅ When a face is successfully recognized for several consecutive frames, Python sends a **'1'** to the Arduino.
+* ❌ If the face is not recognized, Python sends a **'0'**.
+
+---
+
+## ⚙️ How It Works(Arduino)
+
+* 🟢 **Signal '1'**
+
+  * Turns on the green LED.
+  * Rotates the servo motor **90°**.
+  * Unlocks the door.
+
+* 🔴 **Signal '0'**
+
+  * Turns on the red LED.
+  * Returns (or keeps) the servo motor at **0°**.
+  * Keeps the door locked.
+
+---
+
+## 🛠️ Software/Hardware Used
+
+* 🐍 Python
+* 📷 OpenCV
+* 😊 DeepFace
+* 🔌 Serial
+* 🤖 Arduino
+* ⚙️ Servo Motor
+* 🩸 LEDs
+
+---
+
+## 📝 Notes
+
+* Multiple frames are taken to verify the accuracy of the face scan.
 </div>
