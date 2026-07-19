@@ -51,7 +51,6 @@ the door remains locked.
 * 🔌 Serial
 * 🤖 Arduino
 * ⚙️ Servo Motor
-* 🩸 LEDs
 
 ---
 
